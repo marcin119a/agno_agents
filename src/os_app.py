@@ -9,6 +9,7 @@ from agno.tracing import setup_tracing
 from agents.faq.agent import create_faq_agent
 from agents.human.agent import create_human_agent
 from config import Settings
+from support_team import create_support_team
 
 settings = Settings()
 # A persistent db (rather than the CLI's ephemeral InMemoryDb) so sessions,
@@ -19,12 +20,12 @@ db = SqliteDb(db_file="faq_agent_os.db")
 setup_tracing(db=db)
 faq_agent = create_faq_agent(settings, db=db)
 human_agent = create_human_agent(settings, db=db)
-
+support_team = create_support_team(settings, db=db, faq_agent=faq_agent, human_agent=human_agent)
 
 agent_os = AgentOS(
     name="faq-agent",
     agents=[faq_agent, human_agent],
-    teams=[],
+    teams=[support_team],
     db=db,
 )
 app = agent_os.get_app()

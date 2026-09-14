@@ -29,6 +29,7 @@ INSTRUCTIONS = (
     "czy odpowiedź pochodzi z FAQ."
 )
 
+ROLE = "Odpowiada na ogólne pytania o zasady, opłaty i procedury z bazy FAQ"
 
 def create_faq_agent(settings: Settings, db: BaseDb | None = None) -> Agent:
     """
@@ -37,7 +38,7 @@ def create_faq_agent(settings: Settings, db: BaseDb | None = None) -> Agent:
     return Agent(
         name="FAQ Agent",
         model=create_model(settings),
-        role="Odpowiada na ogólne pytania o zasady, opłaty i procedury z bazy FAQ",
+        role=ROLE,
         instructions=INSTRUCTIONS,
         tools=[FaqTools()],
         output_schema=FaqAnswer,

@@ -21,6 +21,7 @@ ollama = ["agno[ollama]"]
 [project.scripts]
 faq-agent = "cli:main"
 faq-agent-os = "os_app:main"
+faq-agent-team = "support_team:main"
 
 
 [tool.setuptools.packages.find]
