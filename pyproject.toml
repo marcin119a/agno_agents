@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "faq-agent"
+version = "0.1.0"
+description = "Example Air airline FAQ agent built on Agno"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "agno[openai,os]>=2.9.0",
+    "pydantic-settings>=2.14.2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0"]
+ollama = ["agno[ollama]"]
+
+[project.scripts]
+faq-agent = "cli:main"
+
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools]
+py-modules = ["cli", "config", "os_app", "support_team"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "tests"]
