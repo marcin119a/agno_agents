@@ -4,6 +4,7 @@ import sys
 
 from agno.db.sqlite import SqliteDb
 from agno.os import AgentOS
+from agno.tracing import setup_tracing
 
 from agents.faq.agent import create_faq_agent
 from agents.human.agent import create_human_agent
@@ -14,6 +15,8 @@ settings = Settings()
 # metrics and traces survive restarts, and AgentOS control-plane features
 # like Service Accounts (which need a real db) work.
 db = SqliteDb(db_file="faq_agent_os.db")
+
+setup_tracing(db=db)
 faq_agent = create_faq_agent(settings, db=db)
 human_agent = create_human_agent(settings, db=db)
 
