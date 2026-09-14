@@ -10,7 +10,8 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "agno[openai,os]>=2.9.0",
-    "pydantic-settings>=2.14.2"
+    "ollama>=0.6.2",
+    "pydantic-settings>=2.14.2",
 ]
 
 [project.optional-dependencies]
