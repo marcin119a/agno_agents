@@ -1,5 +1,5 @@
 import sys
-
+from agno.tracing import setup_tracing
 from agno.agent import Agent
 from agno.db.base import BaseDb
 from agno.models.base import Model
@@ -10,6 +10,7 @@ from agno.team import Team, TeamMode
 from agents.faq.agent import create_faq_agent
 from agents.faq.schemas import FaqAnswer
 from agents.human.agent import create_human_agent
+from agents.baggage.agent import create_baggage_agent
 from config import Settings
 from agno.db.sqlite import SqliteDb
 
@@ -18,6 +19,7 @@ TEAM_INSTRUCTIONS = (
     "- Sprawy dotyczące konkretnej rezerwacji, lotu, biletu lub reklamacji pasażera "
     "kieruj do Human Agent.\n"
     "- Wszystkie pozostałe pytania (zasady, opłaty, procedury) kieruj do FAQ Agent.\n"
+    "- Pytania dotyczące przeliczania bagażu kieruj do Baggage Agent.\n"
 )
 
 
@@ -26,12 +28,16 @@ def create_support_team(
     db: BaseDb | None = None,
     faq_agent: Agent | None = None,
     human_agent: Agent | None = None,
+    baggage_agent: Agent | None = None,
     leader_model: Model | None = None,
 ) -> Team:
     """Builds the leader -> (FAQ Agent | Human Agent) team.
     """
+    setup_tracing(db=db)
     faq_agent = faq_agent or create_faq_agent(settings, db=db)
     human_agent = human_agent or create_human_agent(settings, db=db)
+    baggage_agent = baggage_agent or create_baggage_agent(settings, db=db)
+
 
     leader_model = leader_model or create_model(settings)
 
@@ -39,7 +45,7 @@ def create_support_team(
         name="Support Team",
         mode=TeamMode.route,
         model=leader_model,
-        members=[faq_agent, human_agent],
+        members=[faq_agent, human_agent, baggage_agent],
         instructions=TEAM_INSTRUCTIONS,
         determine_input_for_members=False,
         db=db,
