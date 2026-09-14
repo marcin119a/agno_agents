@@ -7,6 +7,8 @@ from agno.db.base import BaseDb
 from agno.db.in_memory import InMemoryDb
 
 from config import Settings, create_model
+from guardrails.input import default_input_guardrails
+from guardrails.output import default_output_validators
 from agents.faq.schemas import FaqAnswer
 from agents.faq.tools import FaqTools
 
@@ -45,4 +47,6 @@ def create_faq_agent(settings: Settings, db: BaseDb | None = None) -> Agent:
         use_json_mode=settings.model_provider == "ollama",
         db=db or InMemoryDb(),
         add_history_to_context=True,
+        pre_hooks=default_input_guardrails(),
+        post_hooks=default_output_validators(),
     )
