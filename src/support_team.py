@@ -13,6 +13,8 @@ from agents.human.agent import create_human_agent
 from agents.baggage.agent import create_baggage_agent
 from config import Settings
 from agno.db.sqlite import SqliteDb
+from guardrails.input import default_input_guardrails
+from guardrails.output import default_output_validators
 
 TEAM_INSTRUCTIONS = (
     "Jesteś recepcją obsługi klienta linii lotniczej Example Air.\n"
@@ -49,6 +51,8 @@ def create_support_team(
         instructions=TEAM_INSTRUCTIONS,
         determine_input_for_members=False,
         db=db,
+        pre_hooks=default_input_guardrails(),
+        post_hooks=default_output_validators()
     )
 
 
